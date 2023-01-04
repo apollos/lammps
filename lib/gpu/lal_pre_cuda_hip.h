@@ -30,7 +30,7 @@
 // -------------------------------------------------------------------------
 
 
-#if defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__) || defined(__HIP_PLATFORM_SPIRV__)
+#if defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__)
 #define CONFIG_ID 303
 #define SIMD_SIZE 64
 #else
@@ -112,7 +112,7 @@
 //                         KERNEL MACROS - TEXTURES
 // -------------------------------------------------------------------------
 
-#if defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__) || defined(__HIP_PLATFORM_SPIRV__)
+#if defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__)
 #define _texture(name, type)  __device__ type* name
 #define _texture_2d(name, type)  __device__ type* name
 #else
@@ -120,6 +120,7 @@
 #define _texture_2d(name, type) texture<type,1> name
 #endif
 
+/*
 #if (__CUDACC_VER_MAJOR__ < 11)
   #ifdef _DOUBLE_DOUBLE
   #define fetch4(ans,i,pos_tex) {                        \
@@ -134,12 +135,9 @@
     int2 qt = tex1Dfetch(q_tex,i);                       \
     ans=__hiloint2double(qt.y, qt.x);                    \
   }
-  #elif  defined(__HIP_PLATFORM_SPIRV__)
-      #define fetch4(ans,i,pos_tex) tex1Dfetch(&ans, pos_tex, i);
-      #define fetch(ans,i,q_tex) tex1Dfetch(&ans, q_tex,i);
   #else
-    #define fetch4(ans,i,pos_tex) ans=tex1Dfetch(pos_tex, i);
-    #define fetch(ans,i,q_tex) ans=tex1Dfetch(q_tex,i);
+  #define fetch4(ans,i,pos_tex) ans=tex1Dfetch(pos_tex, i);
+  #define fetch(ans,i,q_tex) ans=tex1Dfetch(q_tex,i);
   #endif
 #else
   #define fetch4(ans,i,x) ans=x[i]
@@ -154,8 +152,20 @@
   #define vel_tex v_
   #define mu_tex mu_
 #endif
+*/
+#define fetch4(ans,i,x) ans=x[i]
+#define fetch(ans,i,q) ans=q[i]
+#undef _texture
+#undef _texture_2d
+#define _texture(name, type)
+#define _texture_2d(name, type)
+#define pos_tex x_
+#define quat_tex qif
+#define q_tex q_
+#define vel_tex v_
+#define mu_tex mu_
 
-#if defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__) || defined(__HIP_PLATFORM_SPIRV__)
+#if defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__)
 
 #undef fetch4
 #undef fetch
@@ -212,7 +222,7 @@
 #endif
 #endif
 
-#if defined(CUDA_PRE_NINE) || defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__) || defined(__HIP_PLATFORM_SPIRV__)
+#if defined(CUDA_PRE_NINE) || defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__)
 
   #ifdef _SINGLE_SINGLE
     #define shfl_down __shfl_down

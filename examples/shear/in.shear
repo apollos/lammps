@@ -68,9 +68,9 @@ fix_modify	3 temp new2d
 #		axes yes 0.8 0.02 view 0 0 zoom 1.5 up 0 1 0 adiam 2.0
 #dump_modify	2 pad 4
 
-#dump		3 all movie 100 movie.mpg type type &
-#		axes yes 0.8 0.02 view 0 0 zoom 1.5 up 0 1 0 adiam 2.0
-#dump_modify	3 pad 4
+dump		3 all movie 100 movie.mpg type type &
+		axes yes 0.8 0.02 view 0 0 zoom 1.5 up 0 1 0 adiam 2.0
+dump_modify	3 pad 4
 
 thermo		100
 thermo_modify	temp new2d
